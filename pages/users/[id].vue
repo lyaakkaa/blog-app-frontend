@@ -14,6 +14,16 @@
         <div class="user-details">
           <h2>{{ user.person_name }}</h2>
           <p class="user-username">@{{ user.login }}</p>
+          <p class="user-field">Age: <span>{{ user.age || "Not provided" }}</span></p>
+          <p class="user-field">Location: <span>{{ user.location || "Not provided" }}</span></p>
+          <p class="user-field">
+            Last Activity:
+            <span>{{
+              user.activity
+                ? new Date(user.activity).toLocaleString()
+                : "Not provided"
+            }}</span>
+          </p>
           <button @click="toggleFollow" class="follow-button">
             {{ isFollowing ? "Unfollow" : "Follow" }}
           </button>
@@ -21,7 +31,7 @@
       </div>
 
       <div class="user-posts" v-if="user">
-        <h2>{{ user.person_name }}'s posts</h2>
+        <h2>{{ user.person_name }}'s Posts</h2>
         <div v-if="posts.length" class="posts-list">
           <div v-for="post in posts" :key="post.id" class="post-item">
             <div class="post-header">
@@ -74,7 +84,7 @@ export default {
 
         if (userResponse.ok) {
           this.user = userData;
-          this.checkIfFollowing(); // Check if already following after loading user data
+          this.checkIfFollowing();
         } else {
           this.errorMessage =
             userData.error || "Failed to load user information.";
@@ -258,5 +268,15 @@ h1 {
   color: #d32f2f;
   margin-top: 20px;
   font-size: 14px;
+}
+.user-field {
+  margin: 5px 0;
+  font-size: 16px;
+  color: #444;
+}
+
+.user-field span {
+  font-weight: bold;
+  color: #333;
 }
 </style>

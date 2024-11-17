@@ -31,20 +31,44 @@
               class="input-field"
             />
             <input
-              type="text"
+              type="password"
               v-model="user.password"
               placeholder="Password"
+              class="input-field"
+            />
+            <input
+              type="number"
+              v-model="user.age"
+              placeholder="Age"
+              class="input-field"
+            />
+            <input
+              type="text"
+              v-model="user.location"
+              placeholder="Location"
               class="input-field"
             />
             <input type="file" @change="onFileChange" class="input-file" />
           </template>
           <template v-else>
             <h2>{{ user.person_name }}</h2>
-            <p class="user-info-text">Email: {{ user.email }}</p>
-            <p class="user-info-text">Username: {{ user.login }}</p>
             <p class="user-info-text">
-              Age:
-              {{ Math.floor(Math.random() * 40) }}
+              Email: {{ user.email || "Not provided" }}
+            </p>
+            <p class="user-info-text">
+              Username: {{ user.login || "Not provided" }}
+            </p>
+            <p class="user-info-text">Age: {{ user.age || "Not provided" }}</p>
+            <p class="user-info-text">
+              Location: {{ user.location || "Not provided" }}
+            </p>
+            <p class="user-info-text">
+              Last Activity:
+              {{
+                user.activity
+                  ? new Date(user.activity).toLocaleString()
+                  : "Not provided"
+              }}
             </p>
           </template>
         </div>
@@ -145,6 +169,9 @@ export default {
       formData.append("email", this.user.email);
       formData.append("login", this.user.login);
       formData.append("password", this.user.password);
+      formData.append("age", this.user.age);
+      formData.append("location", this.user.location || null);
+      formData.append("activity", this.user.activity);
       if (this.newAvatar) {
         formData.append("avatar", this.newAvatar);
       }
