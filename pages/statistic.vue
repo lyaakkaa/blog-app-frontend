@@ -111,6 +111,15 @@ export default {
                 display: true,
                 text: "Number of Posts", // Y-axis title
               },
+              ticks: {
+                stepSize: 1, // Шаг между метками
+                callback: function (value) {
+                  if (Number.isInteger(value)) {
+                    return value; // Возвращаем только целые значения
+                  }
+                  return null; // Пропускаем дробные значения
+                },
+              },
             },
           },
         },
