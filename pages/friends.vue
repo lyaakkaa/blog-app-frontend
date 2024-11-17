@@ -41,7 +41,9 @@
               <button @click="rename(friend.id)" class="rename-button">
                 Rename
               </button>
-              <button @click="chat(friend.id)" class="chat-button">Chat</button>
+              <router-link :to="`/chat/${friend.id}`">
+                <button class="chat-button">Chat</button>
+              </router-link>
             </div>
           </div>
         </div>
