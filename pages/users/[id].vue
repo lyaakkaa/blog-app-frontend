@@ -7,15 +7,23 @@
 
       <div v-if="user" class="user-info">
         <img
-          :src="user.avatar ? user.avatar : '_nuxt/src/assets/no_pfp.svg'"
+          :src="
+            user.avatar
+              ? user.avatar
+              : 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+          "
           alt="User Avatar"
           class="user-avatar"
         />
         <div class="user-details">
           <h2>{{ user.person_name }}</h2>
           <p class="user-username">@{{ user.login }}</p>
-          <p class="user-field">Age: <span>{{ user.age || "Not provided" }}</span></p>
-          <p class="user-field">Location: <span>{{ user.location || "Not provided" }}</span></p>
+          <p class="user-field">
+            Age: <span>{{ user.age || "Not provided" }}</span>
+          </p>
+          <p class="user-field">
+            Location: <span>{{ user.location || "Not provided" }}</span>
+          </p>
           <p class="user-field">
             Last Activity:
             <span>{{

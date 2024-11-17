@@ -2,74 +2,110 @@
   <div>
     <Header :toggleMenu="toggleMenu" />
     <div class="profile-container">
-      <h1>User Profile</h1>
-
-      <div v-if="user" class="user-info">
+      <div class="profile-header">
         <img
-          :src="user.avatar || '/src/assets/no_pfp.svg'"
+          :src="
+            user?.avatar ||
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png'
+          "
           alt="User Avatar"
           class="user-avatar"
         />
+        <h1>{{ user?.person_name || "User Profile" }}</h1>
+      </div>
+
+      <div v-if="user" class="user-info">
         <div class="user-details">
           <template v-if="editMode">
-            <input
-              type="text"
-              v-model="user.person_name"
-              placeholder="Name"
-              class="input-field"
-            />
-            <input
-              type="email"
-              v-model="user.email"
-              placeholder="Email"
-              class="input-field"
-            />
-            <input
-              type="text"
-              v-model="user.login"
-              placeholder="Username"
-              class="input-field"
-            />
-            <input
-              type="password"
-              v-model="user.password"
-              placeholder="Password"
-              class="input-field"
-            />
-            <input
-              type="number"
-              v-model="user.age"
-              placeholder="Age"
-              class="input-field"
-            />
-            <input
-              type="text"
-              v-model="user.location"
-              placeholder="Location"
-              class="input-field"
-            />
-            <input type="file" @change="onFileChange" class="input-file" />
+            <div class="input-group">
+              <label for="person_name">Name</label>
+              <input
+                id="person_name"
+                type="text"
+                v-model="user.person_name"
+                placeholder="Name"
+                class="input-field"
+              />
+            </div>
+            <div class="input-group">
+              <label for="email">Email</label>
+              <input
+                id="email"
+                type="email"
+                v-model="user.email"
+                placeholder="Email"
+                class="input-field"
+              />
+            </div>
+            <div class="input-group">
+              <label for="login">Username</label>
+              <input
+                id="login"
+                type="text"
+                v-model="user.login"
+                placeholder="Username"
+                class="input-field"
+              />
+            </div>
+            <div class="input-group">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                v-model="user.password"
+                placeholder="Password"
+                class="input-field"
+              />
+            </div>
+            <div class="input-group">
+              <label for="age">Age</label>
+              <input
+                id="age"
+                type="number"
+                v-model="user.age"
+                placeholder="Age"
+                class="input-field"
+              />
+            </div>
+            <div class="input-group">
+              <label for="location">Location</label>
+              <input
+                id="location"
+                type="text"
+                v-model="user.location"
+                placeholder="Location"
+                class="input-field"
+              />
+            </div>
+            <div class="input-group">
+              <label for="avatar">Avatar</label>
+              <input
+                id="avatar"
+                type="file"
+                @change="onFileChange"
+                class="input-file"
+              />
+            </div>
           </template>
           <template v-else>
-            <h2>{{ user.person_name }}</h2>
-            <p class="user-info-text">
-              Email: {{ user.email || "Not provided" }}
-            </p>
-            <p class="user-info-text">
-              Username: {{ user.login || "Not provided" }}
-            </p>
-            <p class="user-info-text">Age: {{ user.age || "Not provided" }}</p>
-            <p class="user-info-text">
-              Location: {{ user.location || "Not provided" }}
-            </p>
-            <p class="user-info-text">
-              Last Activity:
-              {{
-                user.activity
-                  ? new Date(user.activity).toLocaleString()
-                  : "Not provided"
-              }}
-            </p>
+            <div>
+              <p><strong>Email:</strong> {{ user.email || "Not provided" }}</p>
+              <p>
+                <strong>Username:</strong> {{ user.login || "Not provided" }}
+              </p>
+              <p><strong>Age:</strong> {{ user.age || "Not provided" }}</p>
+              <p>
+                <strong>Location:</strong> {{ user.location || "Not provided" }}
+              </p>
+              <p>
+                <strong>Last Activity:</strong>
+                {{
+                  user.activity
+                    ? new Date(user.activity).toLocaleString()
+                    : "Not provided"
+                }}
+              </p>
+            </div>
           </template>
         </div>
       </div>
@@ -81,6 +117,8 @@
         <button v-if="editMode" @click="saveChanges" class="save-button">
           Save
         </button>
+        <button @click="goToFriends" class="friends-button">Friends</button>
+        <button @click="goToStatistic" class="statistic-button">Statistic</button>
       </div>
 
       <div class="user-posts">
@@ -89,10 +127,13 @@
           <div v-for="post in posts" :key="post.id" class="post-item">
             <div class="post-header">
               <h3>{{ post.commentary }}</h3>
-              <p class="post-date">{{ post.pub_date }}</p>
+              <p class="post-date">
+                {{ new Date(post.pub_date).toDateString() }}
+              </p>
             </div>
             <p class="post-content">Topic: {{ post.topic.name }}</p>
             <p class="post-rating">Rating: {{ post.rating }} ⭐</p>
+            <p class="post-likes">Likes: {{ post.like_count }} ❤️</p>
           </div>
         </div>
         <p v-else class="no-posts">No posts available.</p>
@@ -198,115 +239,132 @@ export default {
         this.errorMessage = "Error saving changes. Please try again.";
       }
     },
+    goToFriends() {
+      this.$router.push(`/friends`);
+    },
+    goToStatistic() {
+      this.$router.push(`/statistic`);
+    },
   },
 };
 </script>
 
 <style scoped>
 .profile-container {
-  max-width: 500px; /* Reduced the width */
+  max-width: 600px;
   margin: 20px auto;
-  padding: 20px; /* Reduced padding */
+  padding: 20px;
   text-align: center;
-  background-color: #ffffff;
-  border-radius: 8px; /* Reduced border-radius */
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1); /* Softer shadow */
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  color: black;
 }
 
-h1 {
-  color: #333;
-  font-weight: bold;
-  margin-bottom: 15px; /* Reduced margin */
-  font-size: 24px; /* Slightly smaller font size */
-}
-
-.user-info {
+.profile-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 15px; /* Reduced padding */
-  background-color: #f9f9f9;
-  border-radius: 6px; /* Reduced border-radius */
-  margin-bottom: 15px;
-  text-align: center;
+  margin-bottom: 20px;
 }
 
 .user-avatar {
   border-radius: 50%;
-  width: 70px; /* Reduced avatar size */
-  height: 70px; /* Reduced avatar size */
-  margin-bottom: 10px; /* Adjusted spacing */
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  margin-bottom: 10px;
 }
 
-.user-details {
-  margin: 0 auto;
-  text-align: center;
-}
-
-.user-details h2 {
-  font-size: 18px; /* Reduced font size */
+h1 {
   color: #333;
-  margin: 0;
+  font-size: 24px;
+  font-weight: bold;
 }
 
-.user-info-text {
-  color: #666;
-  font-size: 12px; /* Reduced font size */
-  margin: 4px 0;
+.user-info {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group label {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
 }
 
 .input-field {
   width: 100%;
-  padding: 8px; /* Reduced padding */
-  margin: 6px 0; /* Reduced margin */
+  padding: 10px;
+  font-size: 14px;
   border: 1px solid #ddd;
-  border-radius: 4px; /* Reduced border-radius */
+  border-radius: 6px;
 }
 
 .input-file {
-  margin-top: 8px; /* Reduced margin */
+  margin-top: 10px;
 }
 
 .button-group {
   display: flex;
-  gap: 8px; /* Reduced gap */
+  gap: 12px;
   justify-content: center;
-  margin-bottom: 15px; /* Reduced margin */
+  margin-bottom: 20px;
 }
 
 .edit-button,
-.save-button {
-  padding: 6px 12px; /* Reduced button padding */
+.save-button,
+.friends-button,
+.statistic-button {
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px; /* Reduced border-radius */
-  font-size: 14px; /* Reduced font size */
+  border-radius: 6px;
+  font-size: 14px;
   font-weight: bold;
   cursor: pointer;
 }
 
 .edit-button {
-  background-color: #4a90e2;
+  background-color: #3498db;
   color: white;
 }
 
 .save-button {
-  background-color: #27ae60;
+  background-color: #2ecc71;
+  color: white;
+}
+
+.friends-button {
+  background-color: #f39c12;
+  color: white;
+}
+
+.statistic-button{
+  background-color: #e131e7;
   color: white;
 }
 
 .user-posts h2 {
   color: #333;
-  font-weight: bold;
-  margin-bottom: 8px; /* Reduced margin */
-  font-size: 18px; /* Reduced font size */
+  font-size: 20px;
+  margin-bottom: 10px;
 }
 
 .post-item {
-  background-color: #f5f5f5;
-  padding: 12px; /* Reduced padding */
-  border-radius: 4px; /* Reduced border-radius */
-  margin-bottom: 10px; /* Reduced margin */
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   text-align: left;
 }
 
@@ -318,22 +376,24 @@ h1 {
 
 .post-header h3 {
   color: #333;
-  font-size: 14px; /* Reduced font size */
+  font-size: 16px;
 }
 
 .post-date {
-  font-size: 10px; /* Reduced font size */
-  color: #999;
+  font-size: 12px;
+  color: #777;
 }
 
 .post-content,
-.post-rating {
-  font-size: 12px; /* Reduced font size */
+.post-rating,
+.post-likes {
+  font-size: 14px;
   color: #555;
 }
 
 .error-message {
-  color: #d32f2f;
-  margin-top: 0.75rem; /* Reduced margin */
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 10px;
 }
 </style>
